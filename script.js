@@ -1,4 +1,6 @@
-// 1. Datos de conexión a la base de datos (Supabase)
+// ==========================================
+// 1. CONEXIÓN A SUPABASE (Base de datos de Ibsen)
+// ==========================================
 const SUPABASE_URL = "https://xpjiiknsobbmaytjlaig.supabase.co/rest/v1/parqueo";
 const API_KEY = "sb_publishable_A-oXd90wBvPbw1iCKnGeLw_BAxclw9U"; 
 
@@ -9,61 +11,133 @@ const opcionesFetch = {
   }
 };
 
-// 2. Inicializar el Mapa centrado en Zacapa
-// Las coordenadas [14.9715, -89.5296] son de Zacapa, ajústalas si es necesario
+// ==========================================
+// 2. CONFIGURACIÓN DEL MAPA
+// ==========================================
 const mapa = L.map('mapa').setView([14.9715, -89.5296], 15);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap'
 }).addTo(mapa);
 
-// Variable para guardar los marcadores y no duplicarlos al actualizar
 let marcadores = [];
 
-// 3. Función principal para cargar y actualizar los datos en tiempo real
+// ==========================================
+// 3. OBTENER DATOS Y CONSTRUIR INTERFAZ
+// ==========================================
 function cargarParqueos() {
   fetch(SUPABASE_URL, opcionesFetch)
     .then(respuesta => respuesta.json())
     .then(datos => {
       
-      // Limpiar los marcadores anteriores del mapa
+      // Limpiar mapa y contenedor de tarjetas para actualizarlos con los datos más recientes
       marcadores.forEach(marcador => mapa.removeLayer(marcador));
       marcadores = [];
       
+      const contenedorTarjetas = document.getElementById("contenedor-tarjetas");
+      contenedorTarjetas.innerHTML = ''; 
+
       datos.forEach(parqueo => {
-        // Determinar color (Verde si hay espacio, Rojo si está lleno)
-        let color = parqueo.espacios_disponibles > 0 ? "🟢" : "🔴";
+        // --- A. ACTUALIZAR MAPA ---
+        let colorPunto = parqueo.espacios_disponibles > 0 ? "🟢" : "🔴";
+        let googleMapsLink = `https://www.google.com/maps/dir/?api=1&destination=${parqueo.latitud},${parqueo.longitud}`;
         
-        // Crear la ventanita emergente del mapa con el botón de "Cómo llegar"
         let popupContenido = `
           <div style="text-align: center;">
             <h3 style="margin: 0 0 5px 0;">${parqueo.nombre}</h3>
-            <p style="margin: 5px 0;"><b>Estado:</b> ${color} ${parqueo.espacios_disponibles} espacios libres</p>
+            <p style="margin: 5px 0;"><b>Estado:</b> ${colorPunto} ${parqueo.espacios_disponibles} libres</p>
             <p style="margin: 5px 0;"><b>Tarifa:</b> ${parqueo.tarifa}</p>
-            <p style="margin: 5px 0;"><b>Horario:</b> ${parqueo.horario}</p>
             <hr>
-            <a href="https://www.google.com/maps/dir/?api=1&destination=${parqueo.latitud},${parqueo.longitud}" target="_blank" style="background: #007bff; color: white; padding: 8px 12px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">📍 Cómo llegar</a>
+            <a href="${googleMapsLink}" target="_blank" style="background: #007bff; color: white; padding: 8px 12px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">📍 Cómo llegar</a>
           </div>
         `;
 
-        // Colocar el marcador en el mapa con sus coordenadas
         let nuevoMarcador = L.marker([parqueo.latitud, parqueo.longitud])
          .addTo(mapa)
          .bindPopup(popupContenido);
-         
         marcadores.push(nuevoMarcador);
 
-        // EXTRA: Si tienes un texto en tu HTML con id="contador", lo actualiza aquí:
-        let textoContador = document.getElementById("contador");
-        if(textoContador) {
-            textoContador.innerText = parqueo.espacios_disponibles;
-        }
+        // --- B. CONSTRUIR TARJETAS HTML ---
+        let estadoClase = parqueo.espacios_disponibles > 0 ? "disponible-texto" : "lleno-texto";
+        let estadoTexto = parqueo.espacios_disponibles > 0 ? "Disponible" : "Lleno";
+
+        // Preparar los datos limpios para pasarlos a la ventana modal
+        let btnClick = `mostrarDetalles('${parqueo.nombre}', ${parqueo.espacios_disponibles}, ${parqueo.capacidad_total}, '${parqueo.tarifa}', '${parqueo.horario}', '${googleMapsLink}')`;
+
+        let tarjetaHTML = `
+            <article class="parqueo-card">
+                <div class="card-superior">
+                    <div>
+                        <h3>${parqueo.nombre}</h3>
+                        <p>Zacapa</p>
+                    </div>
+                    <span class="estado ${estadoClase}">${estadoTexto}</span>
+                </div>
+
+                <div class="espacios">
+                    <div>
+                        <strong>${parqueo.espacios_disponibles}</strong>
+                        <span>espacios libres</span>
+                    </div>
+                    <div>
+                        <strong>${parqueo.capacidad_total}</strong>
+                        <span>espacios totales</span>
+                    </div>
+                </div>
+
+                <div class="informacion-card">
+                    <p>${parqueo.tarifa}</p>
+                    <p>${parqueo.horario}</p>
+                </div>
+
+                <button class="boton-detalles" onclick="${btnClick}">
+                    Ver detalles
+                </button>
+            </article>
+        `;
+        
+        contenedorTarjetas.innerHTML += tarjetaHTML;
       });
     })
-    .catch(error => console.error("Error al cargar datos:", error));
+    .catch(error => console.error("Error al cargar datos desde Supabase:", error));
 }
 
-// 4. Ejecutar la función la primera vez que carga la página
+// Iniciar y refrescar datos cada 3 segundos
 cargarParqueos();
-
-// 5. El truco final: Refrescar silenciosamente los datos cada 3 segundos
 setInterval(cargarParqueos, 3000);
+
+// ==========================================
+// 4. LÓGICA DE LA VENTANA MODAL (DETALLES)
+// ==========================================
+function mostrarDetalles(nombre, libres, totales, tarifa, horario, linkMapa) {
+    document.getElementById("modalNombre").textContent = nombre;
+    document.getElementById("modalEspacios").textContent = libres;
+    document.getElementById("modalTotales").textContent = totales;
+    document.getElementById("modalTarifa").textContent = tarifa;
+    document.getElementById("modalHorario").textContent = horario;
+    document.getElementById("modalUbicacion").href = linkMapa;
+
+    // Cambiar el indicador visual del modal dependiendo de los espacios
+    let circulo = document.getElementById("modalCirculo");
+    let estadoTexto = document.getElementById("modalEstadoTexto");
+    
+    if (libres > 0) {
+        circulo.className = "circulo verde";
+        estadoTexto.textContent = "Disponible";
+    } else {
+        circulo.className = "circulo rojo"; // Asegúrate de tener una clase .rojo en tu CSS para background-color: red;
+        estadoTexto.textContent = "Lleno";
+    }
+
+    document.getElementById("modal").style.display = "flex";
+}
+
+function cerrarDetalles() {
+    document.getElementById("modal").style.display = "none";
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById("modal");
+    if (event.target === modal) {
+        cerrarDetalles();
+    }
+};
