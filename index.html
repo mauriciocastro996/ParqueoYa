@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Parqueo Inteligente Zacapa</title>
+
+    <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+
+<body>
+
+    
+
+    <!-- ENCABEZADO -->
+
+    <header class="encabezado">
+
+        <div class="logo">
+            
+            <h1>Parqueo Zacapa</h1>
+        </div>
+
+        <nav class="menu">
+
+            <a href="#inicio">Inicio</a>
+            <a href="#parqueos">Parqueos</a>
+            <a href="#informacion">Información</a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- PRESENTACIÓN -->
+
+    <main>
+
+        <section class="inicio" id="inicio">
+
+            <div class="inicio-texto">
+
+                <p class="pequeno">SISTEMA DE PARQUEO INTELIGENTE</p>
+
+                <h2>
+                    Encuentra un parqueo
+                    <span>disponible en Zacapa</span>
+                </h2>
+
+                <p>
+                    Consulta los espacios disponibles en diferentes
+                    parqueos de Zacapa antes de llegar.
+                </p>
+
+                <a href="#parqueos" class="boton">
+                    Ver parqueos
+                </a>
+
+            </div>
+
+
+            <div class="tarjeta-auto">
+
+                <div class="auto-icono">
+                    
+                </div>
+
+                <h3>Disponibilidad</h3>
+
+                <p>
+                    Consulta los espacios disponibles
+                    de forma rápida.
+                </p>
+
+                <div class="estado-general">
+
+                    <span class="circulo verde"></span>
+
+                    <span>Parqueos disponibles</span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PARQUEOS -->
+
+        <section class="parqueos" id="parqueos">
+
+            <div class="titulo-seccion">
+
+                <p class="pequeno">
+                    PARQUEOS EN ZACAPA
+                </p>
+
+                <h2>
+                    Parqueos disponibles
+                </h2>
+
+                <p>
+                    Selecciona un parqueo para consultar
+                    su información.
+                </p>
+
+            </div>
+
+
+            <!-- MAPA SIMULADO -->
+
+
+
+            <!-- TARJETAS DE PARQUEOS -->
+
+            <div class="contenedor-parqueos">
+
+
+                <!-- PARQUEO 1 -->
+
+                <article class="parqueo-card">
+
+                    <div class="card-superior">
+
+                        <div>
+
+                            <h3>
+                                Parqueo Centro Zacapa
+                            </h3>
+
+                            <p>
+                                 Centro de Zacapa
+                            </p>
+
+                        </div>
+
+                        <span class="estado disponible-texto">
+                            Disponible
+                        </span>
+
+                    </div>
+
+
+                    <div class="espacios">
+
+                        <div>
+
+                            <strong>18</strong>
+
+                            <span>
+                                espacios libres
+                            </span>
+
+                        </div>
+
+                        <div>
+
+                            <strong>30</strong>
+
+                            <span>
+                                espacios totales
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="informacion-card">
+
+                        <p>
+                             Q5.00 por hora
+                        </p>
+
+                        <p>
+                             7:00 AM - 8:00 PM
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        class="boton-detalles"
+                        onclick="mostrarDetalles(
+                        'Parqueo Centro Zacapa',
+                        '18',
+                        'Q5.00 por hora',
+                        'No requiere reservación. Presentar vehículo en la entrada.'
+                        )">
+
+                        Ver detalles
+
+                    </button>
+
+                </article>
+
+
+
+                <!-- PARQUEO 2 -->
+
+                <article class="parqueo-card">
+
+                    <div class="card-superior">
+
+                        <div>
+
+                            <h3>
+                                Parqueo Plaza Comercial
+                            </h3>
+
+                            <p>
+                                 Zona comercial
+                            </p>
+
+                        </div>
+
+                        <span class="estado lleno-texto">
+                            Lleno
+                        </span>
+
+                    </div>
+
+
+                    <div class="espacios">
+
+                        <div>
+
+                            <strong>0</strong>
+
+                            <span>
+                                espacios libres
+                            </span>
+
+                        </div>
+
+                        <div>
+
+                            <strong>45</strong>
+
+                            <span>
+                                espacios totales
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="informacion-card">
+
+                        <p>
+                             Q10.00 por hora
+                        </p>
+
+                        <p>
+                             8:00 AM - 9:00 PM
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        class="boton-detalles"
+                        onclick="mostrarDetalles(
+                        'Parqueo Plaza Comercial',
+                        '0',
+                        'Q10.00 por hora',
+                        'Acceso únicamente para clientes de la plaza.'
+                        )">
+
+                        Ver detalles
+
+                    </button>
+
+                </article>
+
+
+
+                <!-- PARQUEO 3 -->
+
+                <article class="parqueo-card">
+
+                    <div class="card-superior">
+
+                        <div>
+
+                            <h3>
+                                Parqueo San Jorge
+                            </h3>
+
+                            <p>
+                                 Sector San Jorge
+                            </p>
+
+                        </div>
+
+                        <span class="estado disponible-texto">
+                            Disponible
+                        </span>
+
+                    </div>
+
+
+                    <div class="espacios">
+
+                        <div>
+
+                            <strong>12</strong>
+
+                            <span>
+                                espacios libres
+                            </span>
+
+                        </div>
+
+                        <div>
+
+                            <strong>20</strong>
+
+                            <span>
+                                espacios totales
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="informacion-card">
+
+                        <p>
+                             Q4.00 por hora
+                        </p>
+
+                        <p>
+                             6:00 AM - 10:00 PM
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        class="boton-detalles"
+                        onclick="mostrarDetalles(
+                        'Parqueo San Jorge',
+                        '12',
+                        'Q4.00 por hora',
+                        'Acceso libre. Respetar los espacios señalizados.'
+                        )">
+
+                        Ver detalles
+
+                    </button>
+
+                </article>
+
+
+
+                <!-- PARQUEO 4 -->
+
+                <article class="parqueo-card">
+
+                    <div class="card-superior">
+
+                        <div>
+
+                            <h3>
+                                Parqueo Río Hondo
+                            </h3>
+
+                            <p>
+                                 Río Hondo
+                            </p>
+
+                        </div>
+
+                        <span class="estado disponible-texto">
+                            Disponible
+                        </span>
+
+                    </div>
+
+
+                    <div class="espacios">
+
+                        <div>
+
+                            <strong>7</strong>
+
+                            <span>
+                                espacios libres
+                            </span>
+
+                        </div>
+
+                        <div>
+
+                            <strong>15</strong>
+
+                            <span>
+                                espacios totales
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="informacion-card">
+
+                        <p>
+                             Q3.00 por hora
+                        </p>
+
+                        <p>
+                            7:00 AM - 7:00 PM
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        class="boton-detalles"
+                        onclick="mostrarDetalles(
+                        'Parqueo Río Hondo',
+                        '7',
+                        'Q3.00 por hora',
+                        'No requiere reservación. Acceso durante horario establecido.'
+                        )">
+
+                        Ver detalles
+
+                    </button>
+
+                </article>
+
+            </div>
+
+        </section>
+
+<div id="mapa" style="height: 400px; width: 100%; border-radius: 10px; z-index: 1;"></div>
+
+        <!-- INFORMACIÓN -->
+
+        <section class="informacion" id="informacion">
+
+            <div class="titulo-seccion">
+
+                <p class="pequeno">
+                    SOBRE EL SISTEMA
+                </p>
+
+                <h2>
+                    ¿Cómo funciona?
+                </h2>
+
+            </div>
+
+
+            <div class="pasos">
+
+
+                <div class="paso">
+
+                    <div class="numero">
+                        1
+                    </div>
+
+                    <h3>
+                        Busca
+                    </h3>
+
+                    <p>
+                        Consulta los parqueos disponibles
+                        en Zacapa.
+                    </p>
+
+                </div>
+
+
+                <div class="paso">
+
+                    <div class="numero">
+                        2
+                    </div>
+
+                    <h3>
+                        Consulta
+                    </h3>
+
+                    <p>
+                        Revisa espacios disponibles,
+                        tarifas y reglas.
+                    </p>
+
+                </div>
+
+
+                <div class="paso">
+
+                    <div class="numero">
+                        3
+                    </div>
+
+                    <h3>
+                        Llega
+                    </h3>
+
+                    <p>
+                        Dirígete al parqueo seleccionado
+                        para estacionarte.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- VENTANA DE DETALLES -->
+
+    <div
+        class="modal"
+        id="modal">
+
+        <div class="modal-contenido">
+
+            <button
+                class="cerrar"
+                onclick="cerrarDetalles()">
+                ×
+            </button>
+
+            <h2 id="modalNombre">
+                Parqueo
+            </h2>
+
+            <div class="detalle-estado">
+
+                <span class="circulo verde"></span>
+
+                <span>
+                    Disponible
+                </span>
+
+            </div>
+
+            <p>
+                <strong>Espacios libres:</strong>
+                <span id="modalEspacios"></span>
+            </p>
+
+            <p>
+                <strong>Tarifa:</strong>
+                <span id="modalTarifa"></span>
+            </p>
+
+            <p>
+                <strong>Reglas de acceso:</strong>
+            </p>
+
+            <p id="modalReglas"></p>
+
+            <button
+                class="boton"
+                onclick="cerrarDetalles()">
+
+                Cerrar
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- PIE DE PÁGINA -->
+
+    <footer>
+
+        <p>
+            Sistema de Parqueo Inteligente - Zacapa
+        </p>
+
+        <p>
+            Proyecto de Análisis de Sistemas II
+        </p>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
